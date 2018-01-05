@@ -64,14 +64,17 @@ Where
 *   func is your transfomation function to convert the output into you expected 
 
 ## Input
-sheet 1
+
+### sheet 1
+
 | item | price | number | buyer |
 | :------------- | :--------- | :------------- | :---------- |
 | apple | 100 | two | Andy;Bob |
 | banana | 200 | twelve | Tom; |
 | coffee| 150 |          three | Mary; Calvin |
 
-sheet 2
+### sheet 2
+
 |Type|Price|
 | :------------- | :--------- |
 |Car|10000|
