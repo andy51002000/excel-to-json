@@ -30,6 +30,9 @@ function parse(sheet, trans){
 
     var xlsObjs = [];
     headers = sheet.data.first();
+    if( typeof headers === 'undefined'){
+        return;
+    }
     headers.forEach( (e,i,arr)=>{
 
         arr[i]=e.trim().split(' ').join('_');
@@ -67,12 +70,23 @@ module.exports = {
         var obj = xlsx.parse(path); // parses a file
         var xlsDoc = []
         obj.forEach( (e,i) => {
-            xlsDoc.push(parse(e,transforms[i]));
+            let o = parse(e,transforms[i]);
+            if(typeof o !=='undefined')
+                xlsDoc.push(o);
         })
 
         return xlsDoc;
-    },
+    }
+
+}
 
 
+function reverse(objs){
 
-} 
+    objs.forEach( (e,i,arr)=>{
+
+        
+
+    })
+
+}
