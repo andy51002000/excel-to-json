@@ -74,19 +74,6 @@ module.exports = {
             if(typeof o !=='undefined')
                 xlsDoc.push(o);
         })
-
         return xlsDoc;
     }
-
-}
-
-
-function reverse(objs){
-
-    objs.forEach( (e,i,arr)=>{
-
-        
-
-    })
-
 }

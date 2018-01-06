@@ -141,6 +141,27 @@ var doc = parser.parseXls2Json('./example/sample2.xlsx');
 
 ```
 
+#   Case (Sheet has empty cell)
+If your sheet contains empty cell, simple-excel-to-json will give "" for this cell in result object.
 
+|Type|Price|
+| :------------- | :--------- |
+|Car||
+|Bus|200000|
+
+```js
+    [
+        {
+            "Type":"car",
+            "Price":""
+        },
+        {
+            "Type":"bus",
+            "Price":20000
+        }
+    ]
+]
+
+```
 
 
