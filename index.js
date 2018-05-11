@@ -6,6 +6,14 @@ Array.prototype.first = function () {
     return this[0];
 }
 
+String.prototype.toCamelCase = function() {
+        
+        return this.split('.').map( s =>  s.replace(/^([A-Z])|[\s-_]+(\w)/g, function(match, p1, p2, offset) {
+            if (p2) return p2.toUpperCase();
+            return p1.toLowerCase();        
+        })).join('.')
+
+};
 
 var headers=[]; 
 var transforms = [];
@@ -15,18 +23,16 @@ function toJSON(entry) {
 
     var obj={};
     headers.forEach( (e,i)=>{
-        if(typeof(entry[i])==='undefined'){
-            obj[e]='';
-        }else{
-            obj[e]=entry[i];
-        }
+
+        obj[e] = typeof(entry[i])==='undefined' ? '' : entry[i]
+
     })
 
     return obj;
 }
 
 
-function parse(sheet, trans){
+function parse(sheet, trans, isToCamelCase){
 
     var xlsObjs = [];
     headers = sheet.data.first();
@@ -35,7 +41,7 @@ function parse(sheet, trans){
     }
     headers.forEach( (e,i,arr)=>{
 
-        arr[i]=e.trim().split(' ').join('_');
+        arr[i] = isToCamelCase ? e.trim().toCamelCase() : e.trim().split(' ').join('_');
 
     })
     var headerLength = headers.length;
@@ -69,15 +75,19 @@ module.exports = {
 
         transforms = func;
     },
-    parseXls2Json: function (path, isNested) {
+    parseXls2Json: function (path, option) {
 
         var obj = xlsx.parse(path); // parses a file
         var xlsDoc = []
         obj.forEach( (e,i) => {
             //sheet
-            let o = parse(e,transforms[i]);
+            let isToCamelCase = false;
+            if( option && typeof option.isToCamelCase !== 'undefined') 
+            isToCamelCase = option.isToCamelCase
+
+            let o = parse(e,transforms[i], isToCamelCase);
             if(typeof o !=='undefined'){
-                if(isNested){
+                if(option && option.isNested){
                     xlsDoc.push(convert2NestedObj(o));
                 }else{
                     xlsDoc.push(o);
@@ -87,3 +97,4 @@ module.exports = {
         return xlsDoc;
     }
 }
+

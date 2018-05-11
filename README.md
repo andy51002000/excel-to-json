@@ -61,14 +61,14 @@ console.log(doc[0]);
 ##   Case (Nested JSON)
 
 ```js
- .parseXls2Json(path, true)
+ .parseXls2Json(path, { isNested: true })
 ```
 *   Assign true as second parameter to enable output nested JSON
 
 ### Example
 ``` javascript
 var parser = require('simple-excel-to-json');
-var doc = parser.parseXls2Json('./example/sample.xlsx', true);
+var doc = parser.parseXls2Json('./example/sample.xlsx', { isNested: true });
 //print the data of the first sheet
 console.log(doc[0]);
 ```
@@ -130,6 +130,74 @@ console.log(doc[0]);
 ]
 ```
 
+## Case (To Camel Case)
+
+If you want to have output json with camel case properties, you can apply an 'option' { isToCamelCase: true }  to  parseXls2Json()
+e.g
+'Car Name' to 'carName'
+'product.Type.hasGPS' to 'product.type.hasGPS'
+
+###  Example
+
+``` javascript
+var parser = require('simple-excel-to-json');
+var option = 
+{
+    isToCamelCase: true,
+    isNested: true,
+}
+var doc = parser.parseXls2Json('./example/sample6.xlsx', option );
+```
+
+### Input
+|price|product.Type.hasGPS|Model Name|
+| :-------------| :--------- | :--------- |
+|100|y|sedan 01|
+|150|y|SUV 22|
+|200|n|Sport Cars IV|
+
+
+### Output
+
+```js
+[
+    [
+        {
+            'price': 100,
+            'product':
+            {
+                'type':
+                {
+                    'hasGPS': 'y'
+                }
+            },
+            'modelName': 'sedan 01'
+        },
+        {
+            'price': 150,
+            'product':
+            {
+                'type':
+                {
+                    'hasGPS': 'y'
+                }
+            },
+            'modelName': 'SUV 22'
+        },
+        {
+            'price': 200,
+            'product':
+            {
+                'type':
+                {
+                    'hasGPS': 'n'
+                }
+            },
+            'modelName': 'Sport Cars IV'
+        },
+    ]
+]
+```
 
 
 
@@ -237,12 +305,12 @@ parse.setTranseform( [
 ]);
 
 
-var doc = parser.parseXls2Json('./example/sample2.xlsx', true);
+var doc = parser.parseXls2Json('./example/sample2.xlsx', { isNested: true });
 
 ```
 
 ### Input
-|Type|Price|Dealership.us[0].location|
+|type|price|dealership.us[0].location|
 | :------------- | :--------- | :--------- |
 |Sedan|2000;1000|New York|
 |SUV|2000;500|Ohio|
@@ -281,6 +349,7 @@ var doc = parser.parseXls2Json('./example/sample2.xlsx', true);
     ]
 ]
 ```
+
 
 
 
@@ -356,6 +425,22 @@ If your sheet contains empty cell, simple-excel-to-json will give "" for this ce
 
 
 # Release Note:
+
+## 2.0.0
+add a parameter 'option' to decide the output format 
+
+```js
+option = {
+    isNested: true,
+    toLowerCase: true
+} 
+
+parseXls2Json(path, option)
+```
+
+isNested is true: convert excel data to nested json object
+toLowerCase is true: property in output json data will be lower case 
+
 
 ## 1.1.8
 Update README.md

@@ -121,6 +121,58 @@ describe('lib testing', function(){
 
 describe("xlsParse",function(){
 
+    it("output to camel case", function(){
+        var parser = require('../index');
+ 
+        var option = 
+        {
+            isToCamelCase: true,
+            isNested: true,
+        }
+        var ret = parser.parseXls2Json('./example/sample6.xlsx', option );
+
+        const expect =
+        [
+            [
+                {
+                    'price': 100,
+                    'product':
+                    {
+                        'type':
+                        {
+                            'hasGPS': 'y'
+                        }
+                    },
+                    'modelName': 'sedan 01'
+                },
+                {
+                    'price': 150,
+                    'product':
+                    {
+                        'type':
+                        {
+                            'hasGPS': 'y'
+                        }
+                    },
+                    'modelName': 'SUV 22'
+                },
+                {
+                    'price': 200,
+                    'product':
+                    {
+                        'type':
+                        {
+                            'hasGPS': 'n'
+                        }
+                    },
+                    'modelName': 'Sports Cars IV'
+                },
+            ]
+        ]
+        assert.deepEqual(expect, ret)
+
+    })
+
 
     it("Nested case", function(){
         var parse = require('../index');
@@ -128,7 +180,7 @@ describe("xlsParse",function(){
    
    
         });
-        var data = parse.parseXls2Json('./example/sample3.xlsx', true);
+        var data = parse.parseXls2Json('./example/sample3.xlsx', { isNested: true});
         var ret = _2dCont(data[0]);
         var expect = [
             {
@@ -200,7 +252,7 @@ describe("xlsParse",function(){
             }
         ]);
    
-        var data = parse.parseXls2Json('./example/sample5.xlsx',true);
+        var data = parse.parseXls2Json('./example/sample5.xlsx',{ isNested: true});
         let expect = [
          {
            "price": "100",
