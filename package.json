@@ -1,6 +1,6 @@
 {
   "name": "simple-excel-to-json",
-  "version": "1.0.6",
+  "version": "1.1.8",
   "description": "parse excel to json object",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/andy51002000/excel-to-json#readme",
   "dependencies": {
+    "lodash": "^4.17.10",
     "node-xlsx": "^0.11.2"
   },
   "devDependencies": {

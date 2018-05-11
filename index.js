@@ -1,6 +1,6 @@
 
 var xlsx = require('node-xlsx');
-
+var convert2NestedObj = require('./lib/2DArrayToNestedObj')
 
 Array.prototype.first = function () {
     return this[0];
@@ -59,20 +59,30 @@ function parse(sheet, trans){
     return xlsObjs;
 }
 
+function toNestedObject(){
+
+}
+
 module.exports = {
     
     setTranseform: function( func){
 
         transforms = func;
     },
-    parseXls2Json: function (path) {
+    parseXls2Json: function (path, isNested) {
 
         var obj = xlsx.parse(path); // parses a file
         var xlsDoc = []
         obj.forEach( (e,i) => {
+            //sheet
             let o = parse(e,transforms[i]);
-            if(typeof o !=='undefined')
-                xlsDoc.push(o);
+            if(typeof o !=='undefined'){
+                if(isNested){
+                    xlsDoc.push(convert2NestedObj(o));
+                }else{
+                    xlsDoc.push(o);
+                }
+            }
         })
         return xlsDoc;
     }
