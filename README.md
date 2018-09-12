@@ -426,6 +426,64 @@ If your sheet contains empty cell, simple-excel-to-json will give "" for this ce
 
 # Release Note:
 
+## 2.1.0
+1.
+Replace white space with '_' for property.
+for example, 'card   number' in header --becomes--> 'card_number:'
+
+2.
+Throw 'failedToTransformError' when failed to perform transformation
+
+For example:
+
+``` javascript
+var parser = require('simple-excel-to-json');
+parse.setTranseform( [
+    function(sheet1){
+        sheet1.number = sheet1.number.trim();
+        sheet1.buyer = sheet1.buyer.split(';').filter( item=>item.trim()!=='');
+        sheet1.buyer.forEach( (e,i,arr) => {
+            arr[i]=e.trim();
+        });     
+
+        //lets throw an error for invalid array length
+        if(sheet1.buyer.length <1)
+        {
+            throw new Error('length of sheet1.buyer < 1 ')
+        }     
+
+    },
+    function(sheet2){
+        sheet2.Type = sheet2.Type.toLowerCase();
+    }        
+]);
+
+try
+{
+    var doc = parser.parseXls2Json('./example/sample8.xlsx');
+}
+catch(err)
+{
+    //capture the error
+    if(err instanceof parser.failedToTransformError)
+    {
+        console.log('name: '+ err.name)
+        console.log('message: '+ err.message)
+        console.log('stack: '+ err.stack)
+    }
+}
+
+//--------------output---------------
+name: failedToTransformError 
+
+message: {"sheet number":0,"element":"{\"item\":\"banana\",\"price\":200,\"number\":\"twelve\",\"buyer\":[]}","index":0,"errorMessage":"length of sheet1.buyer < 1 "}
+
+stack: 
+    at C:\Users\andyl\Documents\excel-to-json\test\test.js:494:27
+    at C:\Users\andyl\Documents\excel-to-json\index.js:73:17
+    ...
+```
+
 ## 2.0.0
 add a parameter 'option' to decide the output format 
 

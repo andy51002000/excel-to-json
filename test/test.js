@@ -121,6 +121,75 @@ describe('lib testing', function(){
 
 describe("xlsParse",function(){
 
+    it("time issue",function(){
+        var parser = require('../index');
+        const parseDateExcel = (excelTimestamp) => {
+
+            const secondsInDay = 24 * 60 * 60;
+        
+            const excelEpoch = new Date(1899, 11, 31);
+        
+            const excelEpochAsUnixTimestamp = excelEpoch.getTime();
+        
+            const missingLeapYearDay = secondsInDay * 1000;
+        
+            const delta = excelEpochAsUnixTimestamp - missingLeapYearDay;
+        
+            const excelTimestampAsUnixTimestamp = excelTimestamp * secondsInDay * 1000;
+        
+            const parsed = excelTimestampAsUnixTimestamp + delta;
+        
+            return isNaN(parsed) ? null : parsed;
+        
+        };
+
+        var ret = parser.parseXls2Json('./example/sample7.xlsx');
+        var x  = ret[0][1]
+        var b = new Date((x.time - (25567 + 1))*86400*1000)
+        var a = new Date(Math.round((x.time - (25567 + 2))*86400)*1000);//ok
+        //https://gist.github.com/christopherscott/2782634
+        var c  = parseDateExcel(x.time)
+        const expect =
+        [
+            [
+                {
+                    'price': 100,
+                    'time':
+                    {
+                        'type':
+                        {
+                            'hasGPS': 'y'
+                        }
+                    },
+                    'modelName': 'sedan 01'
+                },
+                {
+                    'price': 150,
+                    'product':
+                    {
+                        'type':
+                        {
+                            'hasGPS': 'y'
+                        }
+                    },
+                    'modelName': 'SUV 22'
+                },
+                {
+                    'price': 200,
+                    'product':
+                    {
+                        'type':
+                        {
+                            'hasGPS': 'n'
+                        }
+                    },
+                    'modelName': 'Sports Cars IV'
+                },
+            ]
+        ]
+        //assert.deepEqual(expect, ret)        
+    })
+
     it("output to camel case", function(){
         var parser = require('../index');
  
@@ -409,7 +478,44 @@ describe("xlsParse",function(){
 
        var ret2 =  data[1];
        assert.deepEqual(ret2,expect2);
-     })
-
+    })
+     
+    it('transformation exception', function(){
+        var parse = require('../index');
+        parse.setTranseform( [
+            function(sheet1){
+                sheet1.number = sheet1.number.trim();
+                sheet1.buyer = sheet1.buyer.split(';').filter( item=>item.trim()!=='');
+                sheet1.buyer.forEach( (e,i,arr) => {
+                    arr[i]=e.trim();
+                });
+                if(sheet1.buyer.length <1)
+                {
+                    throw new Error('length of sheet1.buyer < 1 ')
+                }     
+   
+            },
+            function(sheet2){
+                sheet2.Type = sheet2.Type.toLowerCase(); 
+            }
+        ]);
+   
+        var data 
+        try
+        {
+            data = parse.parseXls2Json('./example/sample8.xlsx');
+        }catch(err)
+        {
+            if (err instanceof parse.failedToTransformError){
+                console.log('name: '+ err.name)
+                console.log('message: '+ err.message)
+                //console.log('stack: '+ err.stack)
+                assert.isTrue(true)
+                return
+            }
+            assert.fail()
+        }
+        assert.fail()
+    })
   })
   

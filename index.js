@@ -15,6 +15,17 @@ String.prototype.toCamelCase = function() {
 
 };
 
+class failedToTransformError extends Error
+{
+    constructor(name, message, stack)
+    {
+        super();
+        this.name = name
+        this.message = message;
+        this.stack = stack
+    }
+}
+
 var headers=[]; 
 var transforms = [];
 var xlsdata;
@@ -32,7 +43,7 @@ function toJSON(entry) {
 }
 
 
-function parse(sheet, trans, isToCamelCase){
+function parse(sheet, trans, isToCamelCase, sheetnum){
 
     var xlsObjs = [];
     headers = sheet.data.first();
@@ -41,7 +52,7 @@ function parse(sheet, trans, isToCamelCase){
     }
     headers.forEach( (e,i,arr)=>{
 
-        arr[i] = isToCamelCase ? e.trim().toCamelCase() : e.trim().split(' ').join('_');
+        arr[i] = isToCamelCase ? e.trim().toCamelCase() : e.trim().replace(/\s\s+/g, ' ').split(' ').join('_');
 
     })
     var headerLength = headers.length;
@@ -57,8 +68,19 @@ function parse(sheet, trans, isToCamelCase){
         }
         xlsdata = toJSON(element);
         if(typeof(trans)!== 'undefined'){
-            
-            trans(xlsdata);
+            try{
+                trans(xlsdata);
+            }catch(err)
+            {
+                throw new failedToTransformError('failedToTransformError', 
+                    JSON.stringify({
+                        'sheet number': sheetnum,
+                        'element': JSON.stringify(xlsdata),
+                        'index': idx,
+                        'errorMessage':  err.message   
+                    }),
+                    err.stack)
+            }
         }
         xlsObjs.push(xlsdata);
     })    
@@ -71,6 +93,7 @@ function toNestedObject(){
 
 module.exports = {
     
+    failedToTransformError,
     setTranseform: function( func){
 
         transforms = func;
@@ -85,7 +108,7 @@ module.exports = {
             if( option && typeof option.isToCamelCase !== 'undefined') 
             isToCamelCase = option.isToCamelCase
 
-            let o = parse(e,transforms[i], isToCamelCase);
+            let o = parse(e,transforms[i], isToCamelCase, i);
             if(typeof o !=='undefined'){
                 if(option && option.isNested){
                     xlsDoc.push(convert2NestedObj(o));
