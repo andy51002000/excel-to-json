@@ -61,7 +61,7 @@ function parse(sheet, trans, isToCamelCase, sheetnum){
     }
     //remove header
     sheet.data.shift();
-    sheet.data.forEach(function (element) {
+    sheet.data.forEach(function (element, idx) {
 
         if (element === headers ) {
             return;

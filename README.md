@@ -426,13 +426,14 @@ If your sheet contains empty cell, simple-excel-to-json will give "" for this ce
 
 # Release Note:
 
+## 2.1.1
+Issue fix
+
 ## 2.1.0
-1.
-Replace white space with '_' for property.
+1. Replace white space with '_' for property.
 for example, 'card   number' in header --becomes--> 'card_number:'
 
-2.
-Throw 'failedToTransformError' when failed to perform transformation
+2. Throw 'failedToTransformError' when failed to perform transformation
 
 For example:
 
