@@ -26,11 +26,8 @@ class failedToTransformError extends Error
     }
 }
 
-var headers=[]; 
-var transforms = [];
-var xlsdata;
 
-function toJSON(entry) {
+function toJSON(headers, entry) {
 
     var obj={};
     headers.forEach( (e,i)=>{
@@ -43,8 +40,8 @@ function toJSON(entry) {
 }
 
 
-function parse(sheet, trans, isToCamelCase, sheetnum){
-
+function parse( sheet, trans, isToCamelCase, sheetnum){
+    var xlsdata;
     var xlsObjs = [];
     headers = sheet.data.first();
     if( typeof headers === 'undefined'){
@@ -66,8 +63,8 @@ function parse(sheet, trans, isToCamelCase, sheetnum){
         if (element === headers ) {
             return;
         }
-        xlsdata = toJSON(element);
-        if(typeof(trans)!== 'undefined'){
+        xlsdata = toJSON(headers, element);
+        if(typeof trans !== 'undefined' && trans.length > 0){
             try{
                 trans(xlsdata);
             }catch(err)
@@ -87,18 +84,20 @@ function parse(sheet, trans, isToCamelCase, sheetnum){
     return xlsObjs;
 }
 
-function toNestedObject(){
 
-}
 
-module.exports = {
-    
-    failedToTransformError,
-    setTranseform: function( func){
+class XlsParser
+{
+    constructor(trans)
+    {
+        this.transforms = typeof trans !== 'undefined' ? trans: []
+    }
 
-        transforms = func;
-    },
-    parseXls2Json: function (path, option) {
+    setTranseform( func){
+        this.transforms = func;
+    }
+
+    parseXls2Json (path, option) {
 
         var obj = xlsx.parse(path); // parses a file
         var xlsDoc = []
@@ -107,8 +106,8 @@ module.exports = {
             let isToCamelCase = false;
             if( option && typeof option.isToCamelCase !== 'undefined') 
             isToCamelCase = option.isToCamelCase
-
-            let o = parse(e,transforms[i], isToCamelCase, i);
+    
+            let o = parse(e, this.transforms[i], isToCamelCase, i);
             if(typeof o !=='undefined'){
                 if(option && option.isNested){
                     xlsDoc.push(convert2NestedObj(o));
@@ -119,5 +118,16 @@ module.exports = {
         })
         return xlsDoc;
     }
+
+}
+
+var _ = new XlsParser();
+
+
+module.exports = {
+    failedToTransformError,
+    XlsParser,
+    parseXls2Json: _.parseXls2Json,
+    setTranseform: _.setTranseform
 }
 

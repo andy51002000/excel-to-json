@@ -7,6 +7,23 @@ Read excel file and parse it to javascript Object.
 npm install simple-excel-to-json
 ```
 
+
+# Simplified Usage
+You can just require the modure "simple-excel-to-json" and execute the method 'parseXls2Json' 
+
+```javascript
+
+var parser = require('simple-excel-to-json')
+var doc = parser.parseXls2Json('./example/sample8.xlsx');
+
+```
+
+## Apply transform function
+
+This approach will use the same parser instance to convert a xls into the json data.
+If you have many xls which need different particular transform function, you can create many XlsParser instances then apply the transform functions(see basic usage and advance usage).
+
+
 # Basic Usage
 *   Normal case
 *   Output Nested JSON
@@ -20,7 +37,8 @@ npm install simple-excel-to-json
 
 ### Example
 ``` javascript
-var parser = require('simple-excel-to-json');
+// Create an instance for XlsParser
+var parser = new (require('simple-excel-to-json').XlsParser)();
 var doc = parser.parseXls2Json('./example/sample.xlsx');
 //print the data of the first sheet
 console.log(doc[0]);
@@ -67,7 +85,8 @@ console.log(doc[0]);
 
 ### Example
 ``` javascript
-var parser = require('simple-excel-to-json');
+// Create an instance for XlsParser
+var parser = new (require('simple-excel-to-json').XlsParser)();
 var doc = parser.parseXls2Json('./example/sample.xlsx', { isNested: true });
 //print the data of the first sheet
 console.log(doc[0]);
@@ -140,7 +159,8 @@ e.g
 ###  Example
 
 ``` javascript
-var parser = require('simple-excel-to-json');
+// Create an instance for XlsParser
+var parser = new (require('simple-excel-to-json').XlsParser)();
 var option = 
 {
     isToCamelCase: true,
@@ -213,7 +233,8 @@ Where
 ###  Example
 
 ``` javascript
-var parser = require('simple-excel-to-json');
+// Create an instance for XlsParser
+var parser = new (require('simple-excel-to-json').XlsParser)();
 parse.setTranseform( [
     function(sheet1){
         sheet1.number = sheet1.number.trim();
@@ -295,7 +316,8 @@ var doc = parser.parseXls2Json('./example/sample2.xlsx');
 ###  Example
 
 ``` javascript
-var parser = require('simple-excel-to-json');
+// Create an instance for XlsParser
+var parser = new (require('simple-excel-to-json').XlsParser)();
 parse.setTranseform( [
     function(sheet1){
         sheet1['type'] = sheet1['type'].toLowerCase(); 
@@ -422,9 +444,11 @@ If your sheet contains empty cell, simple-excel-to-json will give "" for this ce
 ```
 
 
-
-
 # Release Note:
+
+## 2.2.0
+Export the constructor XlsParser that can be used to create multiple parser instances                              
+
 
 ## 2.1.1
 Issue fix
