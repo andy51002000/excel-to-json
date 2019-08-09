@@ -14,7 +14,7 @@ You can just require the modure "simple-excel-to-json" and execute the method 'p
 ```javascript
 
 var parser = require('simple-excel-to-json')
-var doc = parser.parseXls2Json('./example/sample8.xlsx');
+var doc = parser.parseXls2Json('./example/sample8.xlsx'); 
 
 ```
 
@@ -445,6 +445,9 @@ If your sheet contains empty cell, simple-excel-to-json will give "" for this ce
 
 
 # Release Note:
+
+## 2.2.1
+Fix bug
 
 ## 2.2.0
 Export the constructor XlsParser that can be used to create multiple parser instances                              

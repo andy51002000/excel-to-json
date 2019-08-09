@@ -107,7 +107,7 @@ class XlsParser
             if( option && typeof option.isToCamelCase !== 'undefined') 
             isToCamelCase = option.isToCamelCase
     
-            let o = parse(e, this.transforms[i], isToCamelCase, i);
+            let o = parse(e, this.transforms ? this.transforms[i]: [], isToCamelCase, i);
             if(typeof o !=='undefined'){
                 if(option && option.isNested){
                     xlsDoc.push(convert2NestedObj(o));

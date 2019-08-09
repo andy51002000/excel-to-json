@@ -852,3 +852,16 @@ describe("xlsParse",function(){
 
   })
   
+
+  describe("basic usage", function() {
+
+    it("should be work if no transform", function() {
+        // Create an instance for XlsParser
+        var parse = require('../index');
+        parse.setTranseform(undefined);
+        var doc = parse.parseXls2Json('./example/sample.xlsx');
+        //print the data of the first sheet
+        console.log(doc[0]);
+    })
+
+  })
