@@ -1,6 +1,6 @@
 {
   "name": "simple-excel-to-json",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "parse excel to json object",
   "main": "index.js",
   "scripts": {
