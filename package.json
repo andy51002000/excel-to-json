@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/andy51002000/excel-to-json#readme",
   "dependencies": {
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "node-xlsx": "^0.16.0"
   },
   "devDependencies": {
