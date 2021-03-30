@@ -1,4 +1,3 @@
-
 var xlsx = require('node-xlsx');
 var convert2NestedObj = require('./lib/2DArrayToNestedObj')
 
@@ -43,7 +42,7 @@ function toJSON(headers, entry) {
 function parse( sheet, trans, isToCamelCase, sheetnum){
     var xlsdata;
     var xlsObjs = [];
-    headers = sheet.data.first();
+    var headers = sheet.data.first();
     if( typeof headers === 'undefined'){
         return;
     }
@@ -104,8 +103,8 @@ class XlsParser
         obj.forEach( (e,i) => {
             //sheet
             let isToCamelCase = false;
-            if( option && typeof option.isToCamelCase !== 'undefined') 
-            isToCamelCase = option.isToCamelCase
+            if(option && typeof option.isToCamelCase !== 'undefined') 
+                isToCamelCase = option.isToCamelCase
     
             let o = parse(e, this.transforms ? this.transforms[i]: [], isToCamelCase, i);
             if(typeof o !=='undefined'){
