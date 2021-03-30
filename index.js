@@ -96,9 +96,9 @@ class XlsParser
         this.transforms = func;
     }
 
-    parseXls2Json (path, option) {
+    parseXls2Json (path, option, xlsxParseOption) {
 
-        var obj = xlsx.parse(path); // parses a file
+        var obj = xlsx.parse(path, xlsxParseOption); // parses a file
         var xlsDoc = []
         obj.forEach( (e,i) => {
             //sheet
