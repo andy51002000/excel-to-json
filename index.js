@@ -28,7 +28,7 @@ class failedToTransformError extends Error
 
 function toJSON(headers, entry) {
 
-    var obj={};
+    let obj={};
     headers.forEach( (e,i)=>{
 
         obj[e] = typeof(entry[i])==='undefined' ? '' : entry[i]
@@ -40,9 +40,9 @@ function toJSON(headers, entry) {
 
 
 function parse( sheet, trans, isToCamelCase, sheetnum){
-    var xlsdata;
-    var xlsObjs = [];
-    var headers = sheet.data.first();
+    let xlsdata;
+    let xlsObjs = [];
+    let headers = sheet.data.first();
     if( typeof headers === 'undefined'){
         return;
     }
@@ -51,7 +51,7 @@ function parse( sheet, trans, isToCamelCase, sheetnum){
         arr[i] = isToCamelCase ? e.trim().toCamelCase() : e.trim().replace(/\s\s+/g, ' ').split(' ').join('_');
 
     })
-    var headerLength = headers.length;
+    let headerLength = headers.length;
     if(headerLength <1){
         throw new Error("No data")
     }
@@ -98,8 +98,8 @@ class XlsParser
 
     parseXls2Json (path, option, xlsxParseOption) {
 
-        var obj = xlsx.parse(path, xlsxParseOption); // parses a file
-        var xlsDoc = []
+        let obj = xlsx.parse(path, xlsxParseOption); // parses a file
+        let xlsDoc = []
         obj.forEach( (e,i) => {
             //sheet
             let isToCamelCase = false;

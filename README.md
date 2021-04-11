@@ -446,6 +446,10 @@ If your sheet contains empty cell, simple-excel-to-json will give "" for this ce
 
 # Release Note:
 
+## 2.3.0
+Support passing options to XLSX parser(node-xlsx) library 
+
+
 ## 2.2.3
 Fix vulnerability issue
 
